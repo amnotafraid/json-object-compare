@@ -1,0 +1,12 @@
+{
+  "name": "tour-connect",
+  "version": "1.0.0",
+  "description": "compare objects for job interview",
+  "main": "compareObj.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "watch": "nodemon --harmony compareObj.js"
+  },
+  "author": "",
+  "license": "ISC"
+}
