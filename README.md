@@ -6,3 +6,9 @@ var arrayA=[1,2,3]
 var arrayB=[3,1,2]
 ```
 These will match.
+
+To get going after cloning:
+```
+npm install
+npm run watch
+```

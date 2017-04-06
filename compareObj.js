@@ -1,23 +1,11 @@
-// Write ES2015 code and import modules from npm
-// and then press "Execute" to run your program.
-
 /*
-  Please write a function that checks if two objects have the same content.
-*/
-/* NOTES:
+  ES2015 function that checks if two objects have the same content.
+
+   NOTES:
   1. Ignore _id.
   2. Keys in the objects are unknown to this function.
-      Please don't do:
-                  offerA.rate equals offerB.rate and
-                  offerA.offerType equals offerB.offerType
-                ...etc
-  3. Write smaller functions if necessary and name them well.
-  4. Write comments if necessary.
-  5. Below are the two objects we want you to compare and the result should be true.
-  6. WHEN COMPLETE, ACTIONS -> SAVE PRIVATE GIST, AND INCLUDE THE LINK IN THE WRITTEN INTERVIEW.
 */
 
-// Optional: Checkout Ramda. It has already been imported in this module for you.
 const R = require('ramda');
 
 const offerA = {
@@ -77,7 +65,7 @@ const offerB = {
     rates: [{commission: '20%', nett: 2}]
 };
 
-// YOUR CODE STARTS HERE.
+// Code starts here
 
 logError = (message, bLog) => {
 	if (bLog) {
@@ -279,4 +267,3 @@ else {
 	logError('objects are not equal', true);
 }
 
-// WHEN COMPLETE SAVE AS PRIVATE GIST AND INCLUDE THE LINK IN THE WRITTEN INTERVIEW.
