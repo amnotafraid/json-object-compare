@@ -12,3 +12,4 @@ To get going after cloning:
 npm install
 npm run watch
 ```
+This is designed to run in the command line and uses hard-coded objects.  The code to use is the equals() function which calls the logError() function.
