@@ -4,6 +4,7 @@
    NOTES:
   1. Ignore _id.
   2. Keys in the objects are unknown to this function.
+  3. Dates match by strings
 */
 
 const R = require('ramda');
@@ -91,7 +92,7 @@ equals = (a, b, bLog=true) => {
    */
   arrayEquals = (a,b,bLog=true) => {
 		if (R.length(a) != R.length(b)) {
-			logError(`array lengths don't match`, bLog);
+			logError(`arrayEquals - array lengths don't match`, bLog);
 			return false;
 		}
 
@@ -100,9 +101,7 @@ equals = (a, b, bLog=true) => {
 		// If you get R.length(b1) == 0 in the end, you win!
 		for (let i = 0; i < R.length(a); i++) {
 			for (let j = 0; j < R.length(b1); j++) {
-				let xA = JSON.stringify(a[i], null, 2);
-				let xB = JSON.stringify(b[j], null, 2);
-				if (propertyEquals(a[i], b[j], false)) {
+				if (propertyEquals(a[i], b1[j], bLog)) {
 					b1.splice(j, 1);
 					// go to the outer loop and try the next value in a
 					break;
@@ -115,17 +114,42 @@ equals = (a, b, bLog=true) => {
 						strA = JSON.stringify(a[i], null, 2);
 					}
 					logError(`NOTE:  _id not compared`, bLog);
-					logError(`There wasn't a match for this item: ${strA}`, bLog);
+					logError(`arrayEquals - There wasn't a match for this item: ${strA}`, bLog);
 					return false;
 				}
 			}
 		}
 
 		if (R.length(b1) != 0) {
-			logError(`Arrays don't match`, bLog);
+			logError(`arrayEquals - Arrays don't match`, bLog);
 			return false;
 		}
 		return true;
+  }
+
+  /*
+   * dateEquals     - evaluates whether two dates or a date and a string
+   *    							represent the same date
+   *
+   * Input:
+   *
+   *		a, b 			- can be Date object or strings
+   *
+   * Output:
+   *
+   *		true  	a = b
+   *    false  	a != b
+   */
+  dateEquals = (a,b,bLog=true) => {
+    if (!(a instanceof Date)) {
+      a = new Date(a);
+    }
+
+    if (!(b instanceof Date)) {
+      b = new Date(b);
+    }
+
+    return a.getTime() === b.getTime();
   }
 
   /*
@@ -149,6 +173,10 @@ equals = (a, b, bLog=true) => {
 
 		let typeA = typeof a;
 		let typeB = typeof b;
+
+    if (a instanceof Date || b instanceof Date) {
+      return dateEquals(a, b, bLog);
+    }
 
 		if (typeA !== typeB) {
 			// It fails right here with these guys
@@ -218,13 +246,13 @@ equals = (a, b, bLog=true) => {
     let bKeys = R.difference(R.keys(b), ['_id']);
 
     if (R.length(aKeys) != R.length(bKeys)) {
-      logError('lengths not equal', bLog);
+      logError('objectEquals - lengths not equal', bLog);
       return false;
     }
 
     for (let i = 0; i < R.length(aKeys); i++) {
       if (!propertyEquals(a[aKeys[i]], b[aKeys[i]], bLog)) {
-				let strA = a[aKeys[i]], strB = b[bKeys[i]];
+				let strA = a[aKeys[i]], strB = b[aKeys[i]];
 				if (a[aKeys[i]] instanceof Object) {
 					strA = JSON.stringify(a[aKeys[i]], null, 2);
 				}
@@ -232,7 +260,7 @@ equals = (a, b, bLog=true) => {
 					strB = JSON.stringify(b[aKeys[i]], null, 2);
 				}
 				logError(`NOTE:  _id not compared`, bLog);
-        logError(`These don't match: ${aKeys[i]}: ${strA} != ${strB}`, bLog);
+        logError(`objectEquals - These don't match: ${aKeys[i]}: ${strA} != ${strB}`, bLog);
         return false;
       }
     }
@@ -241,13 +269,13 @@ equals = (a, b, bLog=true) => {
   }
 
 
-  if (typeof(a) !== 'object') {
-    logError(`first parameter ${a} is not an object`, bLog);
+  if (Object.prototype.toString.call(a) != "[object Object]") {
+    logError(`first parameter ${a} is not an object`, true);
     return false;
   }
 
-  if (typeof(b) !== 'object') {
-    logError(`first parameter ${b} is not an object`, bLog);
+  if (Object.prototype.toString.call(b) != "[object Object]") {
+    logError(`second parameter ${b} is not an object`, true);
     return false;
   }
 
